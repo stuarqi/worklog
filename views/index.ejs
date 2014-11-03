@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/bootstrap/bootstrap.min.css"/>
+    <!--<link rel="stylesheet" href="/stylesheets/bootstrap/bootstrap-theme.css"/>-->
+    <link rel="stylesheet" href="/stylesheets/global.css"/>
+    <link rel="stylesheet" href="/stylesheets/index.css"/>
+  </head>
+  <body>
+  <nav class="navbar navbar-default row">
+    <h1><%= title %></h1>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="panel panel-default col-md-6 col-md-offset-3">
+        <h3>欢迎访问 <%= title %></h3>
+        <form method="post" action="/login">
+          <p class="input-group">
+            <!--<label class="input-group-addon" for="email">电子邮件：</label>-->
+            <input id="email" class="form-control input-sm" name="email" placeholder="请输入电子邮件" type="email"/>
+          </p>
+          <p class="input-group">
+            <!--<label class="input-group-addon" for="pass">登录密码：</label>-->
+            <input id="pass" class="form-control input-sm" name="pass" placeholder="请输入密码" type="password"/>
+          </p>
+          <p class="input-group">
+            <input name="cookie" type="checkbox" id="cookie" checked="checked"/>
+            <label for="cookie">记住我的登录</label>
+          </p>
+          <p class="input-group text-center">
+            <button class="btn btn-sm btn-success" type="submit">登录</button>
+            <a class="btn btn-sm btn-link" href="/forgetLogin">无法登录？</a>
+          </p>
+          <p class="input-group text-right">
+            还没有注册？<a href="/register">马上免费注册</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+  </body>
+</html>

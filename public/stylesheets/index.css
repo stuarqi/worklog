@@ -1,0 +1,29 @@
+form {
+  width: 90%;
+  margin: 0 auto;
+}
+label {
+  font-weight: normal;
+  margin-left: .5em;
+  font-size: 12px;
+  vertical-align: middle;
+}
+.panel {
+  background-color: #FFF;
+  margin-top: 6em;
+}
+.input-group {
+  width: 100%;
+}
+.btn-success {
+  padding-left: 1.5em;
+  letter-spacing: .5em;
+}
+@media (max-width: 767px) {
+  .panel {
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+    margin-top: 0;
+  }
+}
