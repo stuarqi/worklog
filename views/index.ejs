@@ -9,13 +9,11 @@
     <link rel="stylesheet" href="/stylesheets/index.css"/>
   </head>
   <body>
-  <nav class="navbar navbar-default row">
-    <h1><%= title %></h1>
-  </nav>
+  <% include menu %>
   <div class="container">
     <div class="row">
       <div class="panel panel-default col-md-6 col-md-offset-3">
-        <h3>欢迎访问 <%= title %></h3>
+        <h3>欢迎访问 WorkLogs</h3>
         <form method="post" action="/login">
           <p class="input-group">
             <!--<label class="input-group-addon" for="email">电子邮件：</label>-->
