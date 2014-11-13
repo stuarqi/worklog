@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/stylesheets/style.css"/>
+</head>
+<body>
+<% include menu %>
+<h3>注册账户</h3>
+<% include message %>
+<form method="post" action="/register">
+  <p>
+    <input id="email" name="email" placeholder="电子邮件地址" type="email" />
+  </p>
+  <p>
+    <input id="name" name="name" placeholder="真实姓名" type="text" />
+  </p>
+  <p>
+    <input id="passwd" name="passwd" placeholder="登录密码" type="password" />
+  </p>
+  <p>
+    <input id="verifyPasswd" name="verifyPasswd" placeholder="再次输入密码" type="password" />
+  </p>
+  <p>
+    <button type="submit">注册</button>
+  </p>
+</form>
+</body>
+</html>

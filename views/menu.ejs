@@ -1,0 +1,9 @@
+<nav>
+  <% if (locals.user) { %>
+  <span><%= user.name %></span>
+  <a href="/logout">退出</a>
+  <% } else { %>
+  <a href="/login">登录</a>
+  <a href="/register">注册</a>
+  <% } %>
+</nav>

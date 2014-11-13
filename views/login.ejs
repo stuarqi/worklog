@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/stylesheets/style.css"/>
+</head>
+<body>
+<% include menu %>
+<h3>登录</h3>
+<form action="/login" method="post">
+  <p>
+    <input id="email" name="email" placeholder="请输入电子邮件" required="required" type="email"/>
+  </p>
+  <p>
+    <input id="passwd" name="passwd" placeholder="请输入密码" required="required" type="password"/>
+  </p>
+  <p>
+    <input id="cookie" name="cookie" checked="checked" type="checkbox"/><label for="cookie">记住我的登录</label>
+  </p>
+  <p>
+    <button type="submit">登录</button>
+  </p>
+</form>
+<p>
+  <a href="/register">注册</a> <a href="/forgetLogin">无法登录?</a>
+</p>
+</body>
+</html>
