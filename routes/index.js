@@ -11,10 +11,10 @@ router.get('/', function (req, res) {
     });
 });
 
+//登录处理
 router.get('/login', function(req, res) {
   res.render('login', { title: 'Work Log' });
 });
-
 router.post('/login', function (req, res) {
     var info;
     if (info = verifyLogin(req, res)) {
@@ -27,7 +27,6 @@ router.post('/login', function (req, res) {
         });
     }
 });
-
 router.get('/logout', function (req, res) {
     req.session.destroy(function (err) {
         if (err) throw err;
@@ -35,17 +34,75 @@ router.get('/logout', function (req, res) {
     });
 });
 
+//找回密码
+router.get('/forgetLogin', function (req, res) {
+    res.render('forgetLogin', {
+        title : '重置密码'
+    });
+});
+router.post('/forgetLogin', function (req, res) {
+    var email = req.param('email');
+    if (email.trim() === '') {
+        return showError(res, '必须输入电子邮件地址');
+    }
+    if (!regEmail.test(email)) {
+        return showError(res, '请输入有效的电子邮件地址');
+    }
+    User.toResetPass(email, function (err, reply) {
+        if (err) {
+            return showError(res, err.code === 0 ? '邮件地址不存在' : '邮件发送失败，请再试一次');
+        } else {
+            res.render('emailSended', {
+                title: '重置密码'
+            });
+        }
+    });
+});
+router.get('/resetPwd/:mark', function (req, res) {
+    var mark = req.param('mark');
+    User.existsByMark(mark, function (err, count) {
+        if (err) throw err;
+        if (count === 1) {
+            res.render('resetPwd', {
+                title : '重置密码',
+                mark : mark
+            });
+        } else {
+            res.redirect('/');
+        }
+    });
+});
+router.post('/resetPwd', function (req, res) {
+    var passwd = req.param('passwd').trim(),
+        repass = req.param('repass').trim(),
+        mark = req.param('mark').trim();
+    if (passwd === '') {
+        return showError(res, '必须输入新密码');
+    }
+    if (passwd !== repass) {
+        return showError(res, '两次输入的密码不相同');
+    }
+    User.resetPass(mark, passwd, function (err) {
+        if (err) {
+            return showError(res, '内部错误，请重试');
+        }
+        res.render('resetPwdSuccess', {
+            title : '重置密码'
+        });
+    });
+});
+
+
+//注册账户
 router.get('/register', function (req, res) {
   res.render('register', {
     title : '注册新账户'
   });
 });
-
 router.post('/register', function (req, res) {
     var user;
     if (user = verifyRegister(req, res)) {
         user.register(function (err) {
-            console.log(err);
             if (err) {
                 return showError(res, err.code === 20 ? '电子邮件地址已存在' : '内部错误');
             } else {

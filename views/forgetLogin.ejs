@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/stylesheets/style.css"/>
+</head>
+<body>
+<% include menu %>
+<h3>重置密码</h3>
+<% include message %>
+<form method="post" action="/forgetLogin">
+  <p>
+    <input id="email" name="email" placeholder="输入你的电子邮件地址" type="email" />
+  </p>
+  <p>
+    <button type="submit">确定</button>
+  </p>
+</form>
+</body>
+</html>

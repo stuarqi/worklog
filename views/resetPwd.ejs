@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/stylesheets/style.css"/>
+</head>
+<body>
+<% include menu %>
+<h3>重置密码</h3>
+<% include message %>
+<form method="post" action="/resetPwd">
+  <input value="<%= mark %>" name="mark" type="hidden"/>
+  <p>
+    <input id="passwd" name="passwd" type="password" placeholder="输入新登录"/>
+  </p>
+  <p>
+    <input id="repass" name="repass" type="password" placeholder="再次输入新密码"/>
+  </p>
+  <p>
+    <button type="submit">修改密码</button>
+  </p>
+</form>
+</body>
+</html>
