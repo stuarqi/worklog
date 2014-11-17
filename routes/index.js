@@ -6,14 +6,22 @@ var regEmail = /[a-z0-9-.]{1,30}@[a-z0-9-]{1,65}.(com|net|org|info|biz|([a-z]{2,
 
 /* GET home page. */
 router.get('/', function (req, res) {
-    res.render('index', {
-        title : 'Work Log'
-    });
+    if (req.user) {
+        res.render('index', {
+            title: 'Work Log'
+        });
+    } else {
+        res.redirect('/login');
+    }
 });
 
 //登录处理
 router.get('/login', function(req, res) {
-  res.render('login', { title: 'Work Log' });
+    if (req.user) {
+        res.redirect('/');
+    } else {
+        res.render('login', {title: 'Work Log'});
+    }
 });
 router.post('/login', function (req, res) {
     var info;
@@ -21,6 +29,9 @@ router.post('/login', function (req, res) {
         User.getAndVerify(info.email, info.passwd, function (err, user) {
             if (err) {
                 return showError(res, '电子邮件或密码不正确');
+            }
+            if (info.remember) {
+                res.cookie('sign', user._id, {path : '/', httpOnly : true, maxAge : 2592000});
             }
             req.session.uid = user._id;
             res.redirect('/');
@@ -30,6 +41,7 @@ router.post('/login', function (req, res) {
 router.get('/logout', function (req, res) {
     req.session.destroy(function (err) {
         if (err) throw err;
+        res.clearCookie('sign', {path : '/'});
         res.redirect('/');
     });
 });
@@ -148,7 +160,8 @@ function verifyRegister(req, res) {
 
 function verifyLogin(req, res) {
     var email = req.param('email'),
-        passwd = req.param('passwd');
+        passwd = req.param('passwd'),
+        remember = req.param('remember');
     if (email.trim() === '') {
         return showError(res, '电子邮件必须填写');
     }
@@ -157,7 +170,8 @@ function verifyLogin(req, res) {
     }
     return {
         email : email,
-        passwd : passwd
+        passwd : passwd,
+        remember : remember
     };
 }
 
