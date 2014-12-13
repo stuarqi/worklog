@@ -40,6 +40,8 @@ router.get('/forgetLogin', function (req, res) {
         title : '重置密码'
     });
 });
+
+//提交找回密码
 router.post('/forgetLogin', function (req, res) {
     var email = req.param('email');
     if (email.trim() === '') {
@@ -58,6 +60,8 @@ router.post('/forgetLogin', function (req, res) {
         }
     });
 });
+
+//重置密码页面
 router.get('/resetPwd/:mark', function (req, res) {
     var mark = req.param('mark');
     User.existsByMark(mark, function (err, count) {
@@ -72,6 +76,8 @@ router.get('/resetPwd/:mark', function (req, res) {
         }
     });
 });
+
+//提交重置密码
 router.post('/resetPwd', function (req, res) {
     var passwd = req.param('passwd').trim(),
         repass = req.param('repass').trim(),
@@ -99,6 +105,8 @@ router.get('/register', function (req, res) {
     title : '注册新账户'
   });
 });
+
+//提交注册
 router.post('/register', function (req, res) {
     var user;
     if (user = verifyRegister(req, res)) {
