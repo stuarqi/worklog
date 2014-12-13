@@ -11,7 +11,7 @@ router.get('/', function (req, res) {
     });
 });
 
-//登录处理
+//登录页面
 router.get('/login', function(req, res) {
   res.render('login', { title: 'Work Log' });
 });
