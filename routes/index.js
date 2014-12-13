@@ -15,6 +15,8 @@ router.get('/', function (req, res) {
 router.get('/login', function(req, res) {
   res.render('login', { title: 'Work Log' });
 });
+
+//处理登录
 router.post('/login', function (req, res) {
     var info;
     if (info = verifyLogin(req, res)) {
@@ -27,6 +29,8 @@ router.post('/login', function (req, res) {
         });
     }
 });
+
+//退出登录
 router.get('/logout', function (req, res) {
     req.session.destroy(function (err) {
         if (err) throw err;
