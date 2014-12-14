@@ -24,6 +24,17 @@ router.post('/login', function (req, res) {
             if (err) {
                 return showError(res, '电子邮件或密码不正确');
             }
+            /*console.log('----------------------');
+            console.log(req.param('cookie'));
+            console.log(typeof req.param('cookie'));*/
+            if (req.param('cookie') === 'yes') {
+                //设置7天Cookie过期时间
+                res.cookie('uid', user._id, {
+                    maxAge : 604800000,
+                    httpOnly : true,
+                    path : '/'
+                });
+            }
             req.session.uid = user._id;
             res.redirect('/');
         });
