@@ -1,6 +1,5 @@
-var mongoose = require('mongoose');
+var mongoose = require('../lib/mongoose');
 
-mongoose.connect('mongodb://localhost/workLog');
 var schema = new mongoose.Schema({
     name : {type : String},
     email : {type : String},

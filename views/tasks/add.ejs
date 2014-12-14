@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+</head>
+<body>
+    <% include ../menu %>
+    <h3>新建任务</h3>
+    <% include ../message %>
+    <form method="post" action="">
+        <p>
+            <label for="taskName">任务名称</label>
+            <input id="taskName" name="taskName" placeholder="任务名称" required type="text"/>
+        </p>
+        <p>
+            <label for="jira">jira任务地址</label>
+            <input id="jira" name="jira" placeholder="jira任务地址" required type="text"/>
+        </p>
+        <p>
+            <label for="taskIntro">任务描述</label>
+            <textarea required placeholder="任务内容的简要描述" name="taskIntro" id="taskIntro" cols="30" rows="10"></textarea>
+        </p>
+        <p>
+            <label for="endDate">预计完成日期</label>
+            <input id="endDate" name="endDate" placeholder="预计完成日期" type="date" required/>
+        </p>
+        <p><input value="新建任务" type="submit"/></p>
+    </form>
+</body>
+</html>
