@@ -1,6 +1,4 @@
-var mongoose = require('mongoose');
-
-mongoose.connect('mongodb://localhost/workLog');
+var mongoose = require('./include/mongoose');
 
 var schema = new mongoose.Schema({
     name : {type : String},

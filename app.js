@@ -8,9 +8,11 @@ var session = require('express-session');
 
 var messages = require('./lib/middleware/messages');
 var user = require('./lib/middleware/user');
+var checkLogin = require('./lib/middleware/checkLogin');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var task = require('./routes/tasks');
 
 var app = express();
 
@@ -29,9 +31,12 @@ app.use(session({secret : 'keyboard cat'}));
 app.use(user);
 app.use(messages);
 
+app.use('/task', checkLogin);
+
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/tasks', task);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
