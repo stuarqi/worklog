@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var Task = require('../lib/task');
+var Task = require('../lib/Task');
+var Remark = require('../lib/Remark');
 
 //任务列表
 router.get('/', function (req, res) {
@@ -30,14 +31,35 @@ router.post('/add', function (req, res) {
         });
     }
 });
+
+router.get('/:tid', function (req, res) {
+    Task.getById(req.param('tid'), function (err, task) {
+        if (err) {
+            res.status(404);
+            res.end('<h1>404</h1><h2>Not Found</h2>');
+        } else {
+            res.render('tasks/taskDetail', {
+                title : '任务详情',
+                task : task
+            });
+        }
+    });
+});
+
+router.get('/:tid/update', function (req, res) {
+    res.end(req.param('tid'));
+});
+
+
 function verifyAddTask (req, res) {
-    var name = req.param('name').trim(),
+    var taskName = req.param('taskName').trim(),
         jira = req.param('jira').trim(),
+        taskIntro = req.param('taskIntro').trim(),
         stat = parseInt(req.param('stat')),
-        progress = req.param('progress'),
-        remark = req.param('remark').trim(),
+        //progress = req.param('progress'),
+        //remark = req.param('remark').trim(),
         start, end = null, uid;
-    if (!name) {
+    if (!taskName) {
         return showError(res, '请填写任务名称');
     }
     if (!jira) {
@@ -45,21 +67,22 @@ function verifyAddTask (req, res) {
     }
     start = new Date();
     if (stat === 2) {
-        progress = 100;
+        //progress = 100;
         end = new Date();
     }
     uid = req.user['_id'];
-    remark = remark ? [new Remark(remark)] : [];
+    //remark = remark ? [new Remark(remark)] : [];
 
     return new Task({
-        name : name,
+        taskName : taskName,
         jira : jira,
         start : start,
         end : end,
         stat : stat,
-        progress : progress,
+        //progress : progress,
         uid : uid,
-        remark : remark
+        //remark : remark,
+        taskIntro : taskIntro
     });
 }
 function showError(res, msg) {
