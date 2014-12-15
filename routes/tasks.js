@@ -1,39 +1,19 @@
 var express = require('express');
 var router = express.Router();
-var Task = require('../lib/Task');
-var Remark = require('../lib/Remark');
+var Task = require('../lib/task');
 
+//任务列表
 router.get('/', function (req, res) {
-    var data = {
-        title : 'Task List',
-        tasks : []
-    };
-    Task.getList({stat : {$lt : 2}, uid : req.user._id}, {_id : 1, name : 1}, function (err, results) {
-        if (!err) {
-            data.tasks = results;
-        }
-        res.render('task/list', data);
+    Task.getListByUid(req.user._id, function (list) {
+        res.render('tasks/list', {
+            tasks : list
+        });
     });
 });
 
-router.get('/task/:taskId', function (req, res) {
-    var taskId = req.param('taskId');
-    Task.getById(taskId, function (err, task) {
-        if (err) {
-            res.status(400).send('Not Found');
-        } else {
-            res.render('task/taskDetail', {
-                title : task.name,
-                task : task
-            });
-        }
-    });
-});
-
+//新建任务
 router.get('/add', function (req, res) {
-    res.render('task/add', {
-        title : '添加任务'
-    });
+    res.render('tasks/add', {});
 });
 
 router.post('/add', function (req, res) {
@@ -48,7 +28,6 @@ router.post('/add', function (req, res) {
         });
     }
 });
-
 function verifyAddTask (req, res) {
     var name = req.param('name').trim(),
         jira = req.param('jira').trim(),
@@ -81,7 +60,6 @@ function verifyAddTask (req, res) {
         remark : remark
     });
 }
-
 function showError(res, msg) {
     res.error(msg);
     res.redirect('back');

@@ -6,6 +6,7 @@ var regEmail = /[a-z0-9-.]{1,30}@[a-z0-9-]{1,65}.(com|net|org|info|biz|([a-z]{2,
 
 /* GET home page. */
 router.get('/', function (req, res) {
+
     if (req.user) {
         res.render('index', {
             title: 'Work Log'
@@ -15,14 +16,18 @@ router.get('/', function (req, res) {
     }
 });
 
-//登录处理
+
+//登录页面
 router.get('/login', function(req, res) {
-    if (req.user) {
-        res.redirect('/');
-    } else {
+
+    if (!req.user) {
         res.render('login', {title: 'Work Log'});
+    } else {
+        res.redirect('/');
     }
 });
+
+//处理登录
 router.post('/login', function (req, res) {
     var info;
     if (info = verifyLogin(req, res)) {
@@ -30,28 +35,42 @@ router.post('/login', function (req, res) {
             if (err) {
                 return showError(res, '电子邮件或密码不正确');
             }
-            if (info.remember) {
-                res.cookie('sign', user._id, {path : '/', httpOnly : true, maxAge : 2592000});
+            if (req.param('cookie') === 'yes') {
+                //设置7天Cookie过期时间
+                res.cookie('uid', user._id, {
+                    maxAge : 604800000,
+                    httpOnly : true,
+                    path : '/'
+                });
             }
             req.session.uid = user._id;
             res.redirect('/');
         });
     }
 });
+
+//退出登录
 router.get('/logout', function (req, res) {
     req.session.destroy(function (err) {
         if (err) throw err;
-        res.clearCookie('sign', {path : '/'});
-        res.redirect('/');
+        res.clearCookie('uid');
+        res.redirect('/login');
     });
 });
 
 //找回密码
 router.get('/forgetLogin', function (req, res) {
-    res.render('forgetLogin', {
-        title : '重置密码'
-    });
+
+    if (req.user) {
+        res.redirect('/');
+    } else {
+        res.render('forgetLogin', {
+            title: '重置密码'
+        });
+    }
 });
+
+//提交找回密码
 router.post('/forgetLogin', function (req, res) {
     var email = req.param('email');
     if (email.trim() === '') {
@@ -70,20 +89,29 @@ router.post('/forgetLogin', function (req, res) {
         }
     });
 });
+
+//重置密码页面
 router.get('/resetPwd/:mark', function (req, res) {
-    var mark = req.param('mark');
-    User.existsByMark(mark, function (err, count) {
-        if (err) throw err;
-        if (count === 1) {
-            res.render('resetPwd', {
-                title : '重置密码',
-                mark : mark
-            });
-        } else {
-            res.redirect('/');
-        }
-    });
+
+    if (req.user) {
+        res.redirect('/');
+    } else {
+        var mark = req.param('mark');
+        User.existsByMark(mark, function (err, count) {
+            if (err) throw err;
+            if (count === 1) {
+                res.render('resetPwd', {
+                    title: '重置密码',
+                    mark: mark
+                });
+            } else {
+                res.redirect('/');
+            }
+        });
+    }
 });
+
+//提交重置密码
 router.post('/resetPwd', function (req, res) {
     var passwd = req.param('passwd').trim(),
         repass = req.param('repass').trim(),
@@ -107,10 +135,17 @@ router.post('/resetPwd', function (req, res) {
 
 //注册账户
 router.get('/register', function (req, res) {
-  res.render('register', {
-    title : '注册新账户'
-  });
+
+    if (req.user) {
+        res.redirect('/');
+    } else {
+        res.render('register', {
+            title: '注册新账户'
+        });
+    }
 });
+
+//提交注册
 router.post('/register', function (req, res) {
     var user;
     if (user = verifyRegister(req, res)) {
@@ -160,8 +195,7 @@ function verifyRegister(req, res) {
 
 function verifyLogin(req, res) {
     var email = req.param('email'),
-        passwd = req.param('passwd'),
-        remember = req.param('remember');
+        passwd = req.param('passwd');
     if (email.trim() === '') {
         return showError(res, '电子邮件必须填写');
     }
@@ -170,8 +204,7 @@ function verifyLogin(req, res) {
     }
     return {
         email : email,
-        passwd : passwd,
-        remember : remember
+        passwd : passwd
     };
 }
 
