@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/stylesheets/style.css"/>
+  <style>
+  </style>
+</head>
+<body>
+<% include ../menu %>
+<h3><%= title %></h3>
+<div>
+  <a href="#">Update</a>
+</div>
+<dl>
+  <dt>jira任务地址</dt>
+  <dd>
+    <a href="<%= task.jira %>" target="_blank"><%= task.jira %></a>
+  </dd>
+  <dt>开始时间</dt>
+  <dd>
+    <time><%= task.start.toLocaleDateString() %></time>
+  </dd>
+  <dt>任务进度</dt>
+  <dd>
+    <progress value="<%= task.progress %>" max="100"><span><%= task.progress %>%</span></progress>
+  </dd>
+  <dt>工作日志</dt>
+  <dd>
+    <% if (task.remark.length) { %>
+    <ol>
+      <% task.remark.forEach(function (remark, idx) { %>
+      <li>
+        <article>
+          <section><%= remark.content %></section>
+          <footer><time><%= remark.date %></time></footer>
+        </article>
+      </li>
+      <% });%>
+    </ol>
+    <% } %>
+  </dd>
+</dl>
+</body>
+</html>

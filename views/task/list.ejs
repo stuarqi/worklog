@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/stylesheets/style.css"/>
+  <style>
+  </style>
+</head>
+<body>
+<% include ../menu %>
+<h3>Task List</h3>
+<% if (tasks.length) { %>
+<ol>
+  <% tasks.forEach(function (item, idx) { %>
+  <li><a href="/tasks/task/<%= item._id %>"><%= item.name %></a></li>
+  <% }) %>
+</ol>
+<% } else { %>
+<span>没有任务记录</span>
+<% } %>
+<a href="/tasks/add">Add Task</a>
+</body>
+</html>
