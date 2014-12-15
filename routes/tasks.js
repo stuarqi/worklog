@@ -4,7 +4,9 @@ var Task = require('../lib/task');
 
 //任务列表
 router.get('/', function (req, res) {
-    Task.getListByUid(req.user._id, function (list) {
+    Task.getList({
+        uid : req.user._id
+    }, function (err, list) {
         res.render('tasks/list', {
             tasks : list
         });
