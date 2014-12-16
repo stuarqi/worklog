@@ -11,7 +11,7 @@
     <a href="/tasks/add">新建任务</a>
     <ul>
     <% tasks.forEach(function (task) { %>
-        <li><a href="/tasks/<%= task._id %>"><%= task.name %></a></li>
+        <li><a href="/tasks/<%= task._id %>"><%= task.name %></a><em><%= task.progress %>%</em></li>
     <% });%>
     </ul>
 </body>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>更新任务</title>
+  <link rel="stylesheet" href="/stylesheets/style.css"/>
+</head>
+<body>
+<% include ../menu %>
+<h3>更新任务</h3>
+<% include ../message %>
+<form method="post" action="/tasks/update">
+  <input name="tid" value="<%= task._id %>" type="hidden"/>
+  <p>距任务完成还有<em><%= Math.round((task.end - new Date()) / (1000 * 60 * 60 * 24)) %></em>天</p>
+  <p><textarea placeholder="此处填写日志" name="content" id="content" cols="30" rows="10"></textarea></p>
+  <p>
+    <label for="progress">完成进度</label>
+    <input id="progress" name="progress" min="<%= task.progress %>" max="100" type="range" step="5" value="<%= task.progress %>"/>
+    <span id="progressNum"><%= task.progress %></span>%
+  </p>
+  <p><input value="更新" type="submit"/></p>
+  <script>
+    document.querySelector('#progress').addEventListener('change', function (evt) {
+      document.querySelector('#progressNum').innerHTML = evt.target.value;
+    }, false);
+  </script>
+</form>
+</body>
+</html>

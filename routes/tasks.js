@@ -5,6 +5,9 @@ var Remark = require('../lib/Remark');
 var validation = require('../lib/middleware/validation');
 
 router.use(validation);
+router.use(function (req, res, next) {
+    next();
+});
 
 //任务列表
 router.get('/', function (req, res) {
@@ -50,9 +53,55 @@ router.get('/:tid', function (req, res) {
     });
 });
 
-router.get('/:tid/update', function (req, res) {
-    res.end(req.param('tid'));
+router.get('/update/:tid', function (req, res) {
+    Task.getById(req.param('tid'), function (err, task) {
+        if (err) {
+            res.status(404);
+            res.end('<h1>404</h1><h2>Not Found</h2>');
+        } else {
+            if (task.uid === req.user._id.toString()) {
+                res.render('tasks/update', {
+                    task : task
+                });
+            } else {
+                res.status(404);
+                res.end('<h1>404</h1><h2>Not Found</h2>');
+            }
+        }
+    });
 });
+
+router.post('/update', function (req, res) {
+    var content = verifyRemark(req, res);
+    if (content) {
+        Task.update({_id : req.param('tid'), uid : req.user._id}, {
+            $push : {
+                remark : {
+                    date : new Date(),
+                    content : content
+                }
+            },
+            $set : {
+                progress : parseInt(req.param('progress'))
+            }
+        }, function (err, doc) {
+            if (err || !doc) {
+                res.status(404);
+                res.end('<h1>404</h1><h2>Not Found</h2>');
+            } else {
+                res.redirect('/tasks/' + req.param('tid'));
+            }
+        });
+    }
+});
+
+function verifyRemark(req, res) {
+    var content = req.param('content').trim();
+    if (content === '') {
+        return showError(res, '请填写日志内容');
+    }
+    return content;
+}
 
 
 function verifyAddTask (req, res) {
@@ -62,7 +111,8 @@ function verifyAddTask (req, res) {
         //stat = parseInt(req.param('stat')),
         //progress = req.param('progress'),
         //remark = req.param('remark').trim(),
-        start, end = null, uid;
+        end = new Date(req.param('endDate')),
+        start, uid;
     if (!name) {
         return showError(res, '请填写任务名称');
     }

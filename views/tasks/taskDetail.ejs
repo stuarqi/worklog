@@ -11,7 +11,9 @@
 <% include ../menu %>
 <h3><%= title %></h3>
 <div>
-  <a href="#">Update</a>
+  <% if (task.progress < 100) { %>
+  <a href="/tasks/update/<%= task._id %>">添加日志</a>
+  <% } %>
 </div>
 <dl>
   <dt>jira任务地址</dt>
@@ -39,6 +41,8 @@
       </li>
       <% });%>
     </ol>
+    <% } else { %>
+    <p>暂无日志</p>
     <% } %>
   </dd>
 </dl>
