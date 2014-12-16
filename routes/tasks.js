@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var Task = require('../lib/Task');
 var Remark = require('../lib/Remark');
+var validation = require('../lib/middleware/validation');
+
+router.use(validation);
 
 //任务列表
 router.get('/', function (req, res) {
@@ -24,6 +27,7 @@ router.post('/add', function (req, res) {
     if (task) {
         task.save(function (err) {
             if (err) {
+                console.log(err);
                 return showError(res, '添加失败');
             } else {
                 res.redirect('/tasks');
@@ -52,33 +56,33 @@ router.get('/:tid/update', function (req, res) {
 
 
 function verifyAddTask (req, res) {
-    var taskName = req.param('taskName').trim(),
+    var name = req.param('name').trim(),
         jira = req.param('jira').trim(),
         taskIntro = req.param('taskIntro').trim(),
-        stat = parseInt(req.param('stat')),
+        //stat = parseInt(req.param('stat')),
         //progress = req.param('progress'),
         //remark = req.param('remark').trim(),
         start, end = null, uid;
-    if (!taskName) {
+    if (!name) {
         return showError(res, '请填写任务名称');
     }
     if (!jira) {
         return showError(res, '请填写jira任务地址');
     }
     start = new Date();
-    if (stat === 2) {
+    /*if (stat === 2) {
         //progress = 100;
         end = new Date();
-    }
+    }*/
     uid = req.user['_id'];
     //remark = remark ? [new Remark(remark)] : [];
 
     return new Task({
-        taskName : taskName,
+        name : name,
         jira : jira,
         start : start,
         end : end,
-        stat : stat,
+        //stat : stat,
         //progress : progress,
         uid : uid,
         //remark : remark,

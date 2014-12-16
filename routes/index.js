@@ -4,27 +4,46 @@ var User = require('../lib/User');
 
 var regEmail = /[a-z0-9-.]{1,30}@[a-z0-9-]{1,65}.(com|net|org|info|biz|([a-z]{2,3}.[a-z]{2}))/;
 
+router.use(function(req, res, next) {
+    switch (req.url) {
+        case '/login' :
+        case '/forgetLogin' :
+        case '/resetPwd' :
+        case '/register' :
+        case '/resetPwd/*' : {
+            if (req.user) {
+                res.redirect('/');
+            } else {
+                next();
+            }
+            break;
+        }
+        case '/' : {
+            if (!req.user) {
+                res.redirect('/login');
+            } else {
+                next();
+            }
+            break;
+        }
+        default : {
+            next();
+        }
+
+    }
+});
+
 /* GET home page. */
 router.get('/', function (req, res) {
-
-    if (req.user) {
-        res.render('index', {
-            title: 'Work Log'
-        });
-    } else {
-        res.redirect('/login');
-    }
+    res.render('index', {
+        title: 'Work Log'
+    });
 });
 
 
 //登录页面
 router.get('/login', function(req, res) {
-
-    if (!req.user) {
-        res.render('login', {title: 'Work Log'});
-    } else {
-        res.redirect('/');
-    }
+    res.render('login', {title: 'Work Log'});
 });
 
 //处理登录
@@ -60,14 +79,9 @@ router.get('/logout', function (req, res) {
 
 //找回密码
 router.get('/forgetLogin', function (req, res) {
-
-    if (req.user) {
-        res.redirect('/');
-    } else {
         res.render('forgetLogin', {
             title: '重置密码'
         });
-    }
 });
 
 //提交找回密码
@@ -92,10 +106,6 @@ router.post('/forgetLogin', function (req, res) {
 
 //重置密码页面
 router.get('/resetPwd/:mark', function (req, res) {
-
-    if (req.user) {
-        res.redirect('/');
-    } else {
         var mark = req.param('mark');
         User.existsByMark(mark, function (err, count) {
             if (err) throw err;
@@ -108,7 +118,6 @@ router.get('/resetPwd/:mark', function (req, res) {
                 res.redirect('/');
             }
         });
-    }
 });
 
 //提交重置密码
@@ -135,14 +144,9 @@ router.post('/resetPwd', function (req, res) {
 
 //注册账户
 router.get('/register', function (req, res) {
-
-    if (req.user) {
-        res.redirect('/');
-    } else {
         res.render('register', {
             title: '注册新账户'
         });
-    }
 });
 
 //提交注册
